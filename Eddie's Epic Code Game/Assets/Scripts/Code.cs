@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Code : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int numCodeBlocks = 5;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public bool forward = true;
+    public bool turnLeft = true;
+    public bool turnRight = true;
+
+    List<string> code = new List<string>();
 }

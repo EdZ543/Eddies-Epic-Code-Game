@@ -4,15 +4,36 @@ using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Grid grid;
+
+    private float stepWidth;
+    private float stepHeight;
+
     void Start()
     {
-        
+        stepWidth = grid.cellSize.x;
+        stepHeight = grid.cellSize.y;
+
+        Debug.Log(stepWidth);
     }
 
-    // Update is called once per frame
-    void Update()
+    void moveTopLeft()
     {
-        
+
+    }
+
+    void moveTopRight()
+    {
+
+    }
+
+    void moveBottomLeft()
+    {
+
+    }
+
+    void moveBottomRight()
+    {
+
     }
 }
