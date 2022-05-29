@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerMovementController : MonoBehaviour
 {
     public Grid grid;
+    public Tilemap tilemap;
+    public Vector3Int tilemapPosition;
 
     Animator animator;
 
@@ -21,34 +24,14 @@ public class PlayerMovementController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    void moveTopLeft()
-    {
-        transform.Translate(-stepWidth, stepHeight, 0);
-    }
-
-    void moveTopRight()
-    {
-        transform.Translate(stepWidth, stepHeight, 0);
-    }
-
-    void moveBottomLeft()
-    {
-        transform.Translate(-stepWidth, -stepHeight, 0);
-    }
-
-    void moveBottomRight()
-    {
-        transform.Translate(stepWidth, -stepHeight, 0);
-    }
-
-    void turnRight()
+    public void turnRight()
     {
         direction = (direction + 1) % directions.Length;
 
         animator.SetBool("Turn Right", true);
     }
 
-    void turnLeft()
+    public void turnLeft()
     {
         direction = direction - 1;
         if (direction < 0)
@@ -59,40 +42,32 @@ public class PlayerMovementController : MonoBehaviour
         animator.SetBool("Turn Left", true);
     }
 
-    void moveForward()
+    public void moveForward()
     {
+        Vector3Int nextTilemapPosition = tilemapPosition;
+
         switch (directions[direction])
         {
             case "br":
-                moveBottomRight();
+                transform.Translate(stepWidth, -stepHeight, 0);
+                nextTilemapPosition += Vector3Int.down;
+
                 break;
             case "bl":
-                moveBottomLeft();
+                transform.Translate(-stepWidth, -stepHeight, 0);
+                nextTilemapPosition += Vector3Int.left;
                 break;
             case "tl":
-                moveTopLeft();
+                transform.Translate(-stepWidth, stepHeight, 0);
+                nextTilemapPosition += Vector3Int.up;
                 break;
             case "tr":
-                moveTopRight();
+                transform.Translate(stepWidth, stepHeight, 0);
+                nextTilemapPosition += Vector3Int.right;
                 break;
-         }
-    }
-
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            turnRight();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            turnLeft();
-        }
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            moveForward();
-        }
+        Tile tile = tilemap.GetTile<Tile>(nextTilemapPosition);
+        Debug.Log(tile.transform.GetPosition());
     }
 }
