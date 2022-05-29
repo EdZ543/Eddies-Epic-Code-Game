@@ -7,7 +7,6 @@ public class PlayerMovementController : MonoBehaviour
 {
     public Grid grid;
     public Tilemap tilemap;
-    public Vector3Int tilemapPosition;
 
     Animator animator;
 
@@ -16,12 +15,16 @@ public class PlayerMovementController : MonoBehaviour
     private string[] directions = { "br", "bl", "tl", "tr" };
     private float stepWidth;
     private float stepHeight;
+    private Vector3Int tilemapPosition;
+    private Vector3 offset = new Vector3(0f, 0.2f, 0f);
 
     void Start()
     {
         stepWidth = grid.cellSize.x;
         stepHeight = grid.cellSize.y;
         animator = GetComponent<Animator>();
+        tilemapPosition = grid.WorldToCell(transform.position);
+        transform.position = grid.CellToWorld(tilemapPosition) + offset;
     }
 
     public void turnRight()
@@ -42,6 +45,12 @@ public class PlayerMovementController : MonoBehaviour
         animator.SetBool("Turn Left", true);
     }
 
+    bool tileIsClear(Vector3Int position)
+    {
+        Sprite sprite = tilemap.GetSprite(position);
+        return sprite == null;
+    }
+
     public void moveForward()
     {
         Vector3Int nextTilemapPosition = tilemapPosition;
@@ -49,25 +58,23 @@ public class PlayerMovementController : MonoBehaviour
         switch (directions[direction])
         {
             case "br":
-                transform.Translate(stepWidth, -stepHeight, 0);
                 nextTilemapPosition += Vector3Int.down;
-
                 break;
             case "bl":
-                transform.Translate(-stepWidth, -stepHeight, 0);
                 nextTilemapPosition += Vector3Int.left;
                 break;
             case "tl":
-                transform.Translate(-stepWidth, stepHeight, 0);
                 nextTilemapPosition += Vector3Int.up;
                 break;
             case "tr":
-                transform.Translate(stepWidth, stepHeight, 0);
                 nextTilemapPosition += Vector3Int.right;
                 break;
         }
 
-        Tile tile = tilemap.GetTile<Tile>(nextTilemapPosition);
-        Debug.Log(tile.transform.GetPosition());
+        if (tileIsClear(nextTilemapPosition + new Vector3Int(0, 0, 1)))
+        {
+            transform.position = grid.CellToWorld(nextTilemapPosition) + offset;
+            tilemapPosition = nextTilemapPosition;
+        }
     }
 }
