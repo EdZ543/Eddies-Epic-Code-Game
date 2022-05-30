@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Code : MonoBehaviour
 {
@@ -21,7 +21,7 @@ public class Code : MonoBehaviour
     private int squaresPerRow = 9;
     private int rows;
 
-    List<string> code = new List<string>();
+    static List<string> code = new List<string>();
     List<GameObject> squares = new List<GameObject>();
 
     private void Start()
@@ -44,8 +44,6 @@ public class Code : MonoBehaviour
         }
 
         squares.Clear();
-
-        int y = 0;
 
         for (int i = 0; i < numCodeBlocks; i++) {
             GameObject prefab = emptySquare;
@@ -92,8 +90,18 @@ public class Code : MonoBehaviour
         StartCoroutine(runCoRoutine());
     }
 
+    void setChildrenActive(bool active)
+    {
+        foreach (Button button in transform.GetComponentsInChildren<Button>())
+        {
+            button.interactable = active;
+        }
+    }
+
     IEnumerator runCoRoutine()
     {
+        setChildrenActive(false);
+
         for (int i = 0; i < code.Count; i++)
         {
             switch (code[i])
