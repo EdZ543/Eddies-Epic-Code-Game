@@ -48,10 +48,10 @@ public class PlayerMovementController : MonoBehaviour
     bool tileIsClear(Vector3Int position)
     {
         Sprite sprite = tilemap.GetSprite(position);
-        return sprite == null;
+        return sprite == null || sprite.name == "milk";
     }
 
-    public void moveForward()
+    Vector3Int tileInFront()
     {
         Vector3Int nextTilemapPosition = tilemapPosition;
 
@@ -71,10 +71,27 @@ public class PlayerMovementController : MonoBehaviour
                 break;
         }
 
+        return nextTilemapPosition;
+    }
+
+    public void moveForward()
+    {
+        Vector3Int nextTilemapPosition = tileInFront();
+
         if (tileIsClear(nextTilemapPosition + new Vector3Int(0, 0, 1)))
         {
             transform.position = grid.CellToWorld(nextTilemapPosition) + offset;
             tilemapPosition = nextTilemapPosition;
+
+            /*if (isMilk(tilemapPosition))
+            {
+
+            }*/
         }
+    }
+
+    public void open()
+    {
+
     }
 }
