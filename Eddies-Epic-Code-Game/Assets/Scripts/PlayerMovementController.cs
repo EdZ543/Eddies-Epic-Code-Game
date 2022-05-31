@@ -7,6 +7,7 @@ public class PlayerMovementController : MonoBehaviour
 {
     public Grid grid;
     public Tilemap tilemap;
+    public bool drankMilk = false;
 
     Animator animator;
 
@@ -17,6 +18,7 @@ public class PlayerMovementController : MonoBehaviour
     private float stepHeight;
     private Vector3Int tilemapPosition;
     private Vector3 offset = new Vector3(0f, 0.2f, 0f);
+    private bool keyBearer = false;
 
     void Start()
     {
@@ -48,7 +50,7 @@ public class PlayerMovementController : MonoBehaviour
     bool tileIsClear(Vector3Int position)
     {
         Sprite sprite = tilemap.GetSprite(position);
-        return sprite == null || sprite.name == "milk";
+        return sprite == null || sprite.name == "milk" || sprite.name == "forbidden_milk" || sprite.name == "key";
     }
 
     Vector3Int tileInFront()
@@ -83,15 +85,36 @@ public class PlayerMovementController : MonoBehaviour
             transform.position = grid.CellToWorld(nextTilemapPosition) + offset;
             tilemapPosition = nextTilemapPosition;
 
-            /*if (isMilk(tilemapPosition))
+            if (on("milk"))
             {
-
-            }*/
+                drinkMilk();
+            }
+            else if (on("forbidden_milk") && keyBearer)
+            {
+                drinkMilk();
+            }
+            else if (on("key"))
+            {
+                drinkKey();
+            }
         }
     }
 
-    public void open()
+    public bool on(string item)
     {
+        Sprite sprite = tilemap.GetSprite(tilemapPosition + new Vector3Int(0, 0, 1));
+        return sprite != null && sprite.name == item;
+    }
 
+    public void drinkMilk()
+    {
+        tilemap.SetTile(tilemapPosition + new Vector3Int(0, 0, 1), null);
+        drankMilk = true;
+    }
+
+    public void drinkKey()
+    {
+        tilemap.SetTile(tilemapPosition + new Vector3Int(0, 0, 1), null);
+        keyBearer = true;
     }
 }

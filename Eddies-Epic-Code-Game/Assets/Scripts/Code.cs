@@ -21,7 +21,7 @@ public class Code : MonoBehaviour
     private int squaresPerRow = 9;
     private int rows;
 
-    static List<string> code = new List<string>();
+    public static List<string> code = new List<string>();
     List<GameObject> squares = new List<GameObject>();
 
     private void Start()
@@ -102,6 +102,8 @@ public class Code : MonoBehaviour
     {
         setChildrenActive(false);
 
+        bool won = false;
+
         for (int i = 0; i < code.Count; i++)
         {
             switch (code[i])
@@ -115,14 +117,31 @@ public class Code : MonoBehaviour
                 case "Turn Left":
                     playerMovementController.turnLeft();
                     break;
-                case "Open":
-                    playerMovementController.open();
-                    break;
             }
 
             yield return new WaitForSeconds(0.5f);
+
+            if (playerMovementController.drankMilk)
+            {
+                won = true;
+                code.Clear();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            }
         }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (!won) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void clear()
+    {
+        code.Clear();
+        instantiateSquares();
+    }
+
+    public void delete()
+    {
+        if (code.Count == 0) return;
+        code.RemoveAt(code.Count - 1);
+        instantiateSquares();
     }
 }
