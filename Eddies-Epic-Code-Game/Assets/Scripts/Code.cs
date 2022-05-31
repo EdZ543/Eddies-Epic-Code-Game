@@ -20,6 +20,7 @@ public class Code : MonoBehaviour
     private int gap = 20;
     private int squaresPerRow = 9;
     private int rows;
+    private float stepDelay = 0.25f;
 
     public static List<string> code = new List<string>();
     List<GameObject> squares = new List<GameObject>();
@@ -119,7 +120,7 @@ public class Code : MonoBehaviour
                     break;
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(stepDelay);
 
             if (playerMovementController.drankMilk)
             {
