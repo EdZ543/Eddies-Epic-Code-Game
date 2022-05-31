@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Animations;
 
 public class PlayerMovementController : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class PlayerMovementController : MonoBehaviour
         animator = GetComponent<Animator>();
         tilemapPosition = grid.WorldToCell(transform.position);
         transform.position = grid.CellToWorld(tilemapPosition) + offset;
+
     }
 
     public void turnRight()
